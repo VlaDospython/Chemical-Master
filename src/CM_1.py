@@ -71,6 +71,7 @@ def set_all_channels_volume_to_zero():
 
     pygame.mixer.music.set_volume(0)
 
+
 class AnimateGifLabel(Label):
     def __init__(self, *argv, image = None,  **kwargs):
         self.master = argv[0]
@@ -107,6 +108,7 @@ def set_user_music():
     play_background_music(filedialog.askopenfilename(filetypes=(('Music (mp3, wav)', '*.mp3'), ('All files', '*.*'))))
 
 
+
 class Chemical_Master:
     def __init__(self, root):
         self.root = root
@@ -133,12 +135,12 @@ class Chemical_Master:
         self.correct_answers = 0
         self.incorrect_answers = 0
         self.delay = 700
-        self.time_of_GIF = 7000
+        self.time_of_GIF = 6500
         self.correct_answer_sound = "../res/sounds/correct_answer_sound.wav"
         self.incorrect_answer_sound = "../res/sounds/incorrect_answer_sound.mp3"
         self.end_of_game_sound = "../res/sounds/end_of_game_sound.mp3"
         self.start_game_sound = "../res/sounds/start_game_sound.mp3"
-        self.background_music = "../res/sounds/background_music.mp3"
+        self.background_music_1 = "../res/sounds/background_music/background_music.mp3"
         self.close_game_sound = "../res/sounds/close_game_sound.mp3"
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
@@ -305,8 +307,8 @@ class Chemical_Master:
                 "correct_name": "Флуоридна кислота",
                 "image": "../res/pictures/acid_pictures/HF.JPG",
                 "description": "Флуори́дна кислота (пла́викова кислота́) — розчин фтороводню у воді. Назва «плавикова кислота» походить від плавикового шпату(CaF₂), з якого добувають фтороводень дією сульфатної кислоти(H₂SO₄). "
-                                "При контакті зі шкірою спочатку утворюються безболісні опіки, пізніше омертвіння тканин. Може викликати зупинку серця та смерть. "
-                                "Використовується як електроліт у літій-іонних акумуляторах. Такі акумулятори застосовуються у різних пристроях, від портативних електронних пристроїв до електромобілів."
+                               "При контакті зі шкірою спочатку утворюються безболісні опіки, пізніше омертвіння тканин. Може викликати зупинку серця та смерть. "
+                               "Використовується як електроліт у літій-іонних акумуляторах. Такі акумулятори застосовуються у різних пристроях, від портативних електронних пристроїв до електромобілів."
             },
             "HCl": {
                 "correct_name": "Хлоридна кислота",
@@ -446,46 +448,26 @@ class Chemical_Master:
 
         root.after(self.time_of_GIF, self.commands_after_gif)
 
+
+    # def on_minimize(self, event):
+    #     root.iconify()
+    #     self.popup.iconify()
+    #
+    # def on_deiconify(self, event):
+    #     root.deiconify()
+    #     self.popup.deiconify()
+
     def commands_after_gif(self):
         self.gif.destroy()
         self.set_picture_on_background("../res/pictures/background_pictures/chemistry_png.jpg")
         self.create_menu()
         self.show_message("Завантаження завершено!\nОберіть режим гри і почніть грати (або вийти)", 3, 700, 170)
 
-        root.bind("<Unmap>", self.on_minimize)
-        self.popup.bind("<Unmap>", self.on_minimize)
-
-        root.bind("<Map>", self.on_deiconify)
-        self.popup.bind("<Map>", self.on_deiconify)
-
-        # self.root.bind('<Configure>', lambda: self.update_position(event=None))
-
-        self.update_position()
-
-    def update_position(self):
-        root_x, root_y = self.root.winfo_rootx(), self.root.winfo_rooty()
-        root_width, root_height = self.root.winfo_width(), self.root.winfo_height()
-
-        popup_width, popup_height = self.popup.winfo_reqwidth(), self.popup.winfo_reqheight()
-
-        x = root_x + (root_width - popup_width) // 2
-        y = root_y + (root_height - popup_height) // 2
-
-        self.popup.geometry(f"+{x}+{y-50}")
-        self.popup.lift()
-
-        self.root.after(5, self.update_position)
-
-    def on_move(self, event):
-        self.moved = True
-
-    def on_minimize(self, event):
-        root.iconify()
-        self.popup.iconify()
-
-    def on_deiconify(self, event):
-        root.deiconify()
-        self.popup.deiconify()
+        # root.bind("<Unmap>", self.on_minimize)
+        # self.popup.bind("<Unmap>", self.on_minimize)
+        #
+        # root.bind("<Map>", self.on_deiconify)
+        # self.popup.bind("<Map>", self.on_deiconify)
 
     def create_menu(self):
         self.menubar = Menu(self.root)
@@ -603,7 +585,18 @@ class Chemical_Master:
         self.popup.resizable(False, False)
 
         self.popup.update()
-        self.popup.lift()
+        self.popup.transient(root)
+
+        # Визначення початкового зміщення
+        self.delta_x = self.popup.winfo_x() - root.winfo_x()
+        self.delta_y = self.popup.winfo_y() - root.winfo_y()
+
+        # Ініціалізація останніх координат
+        self.last_x, self.last_y = root.winfo_x(), root.winfo_y()
+
+        # Прив'язка подій до обох вікон
+        root.bind("<Configure>", self.sync_windows)
+        self.popup.bind("<Configure>", self.sync_windows)
 
         label = Label(self.popup, text=message, font=("Consolas", 14))
         label.pack(padx=10, pady=10)
@@ -684,6 +677,23 @@ class Chemical_Master:
             self.radio_b_3.pack(side=TOP, pady=5)
             close_button.config(text="Підтвердити", command=self.change_section_1)
             close_button.pack(side=BOTTOM, pady=10)
+
+    def sync_windows(self, event):
+        """Синхронізація позицій вікон з затримкою."""
+        if event.widget == root:
+            # Рухаємо Toplevel разом з root
+            new_x = root.winfo_x() + self.delta_x
+            new_y = root.winfo_y() + self.delta_y
+            if (new_x, new_y) != (self.last_x, self.last_y):
+                self.popup.geometry(f"+{new_x}+{new_y}")
+                self.last_x, self.last_y = new_x, new_y
+        elif event.widget == self.popup:
+            # Рухаємо root разом з Toplevel
+            new_x = self.popup.winfo_x() - self.delta_x
+            new_y = self.popup.winfo_y() - self.delta_y
+            if (new_x, new_y) != (self.last_x, self.last_y):
+                root.geometry(f"+{new_x}+{new_y}")
+                self.last_x, self.last_y = new_x, new_y
 
     def update_salt(self):
         if self.index < 9:
@@ -851,7 +861,7 @@ class Chemical_Master:
 
             play_sound(self.start_game_sound)
 
-            root.after(2500, lambda: play_background_music(self.background_music))
+            root.after(2500, lambda: play_background_music(self.background_music_1))
 
         else:
             self.popup.destroy()
@@ -871,7 +881,7 @@ class Chemical_Master:
 
             play_sound(self.start_game_sound)
 
-            root.after(2500, lambda: play_background_music(self.background_music))
+            root.after(2500, lambda: play_background_music(self.background_music_1))
 
     def first_radio_button_change_section(self):
         self.radio_b_1.config(bg="PaleGreen2")
