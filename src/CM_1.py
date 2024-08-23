@@ -5,6 +5,8 @@ import time
 from PIL import ImageTk, Image
 import pygame
 import pyperclip
+
+
 # from tkinter import ttk
 
 
@@ -73,7 +75,7 @@ def set_all_channels_volume_to_zero():
 
 
 class AnimateGifLabel(Label):
-    def __init__(self, *argv, image = None,  **kwargs):
+    def __init__(self, *argv, image=None, **kwargs):
         self.master = argv[0]
         self.filename = image
         self.check_cadrs()
@@ -81,7 +83,7 @@ class AnimateGifLabel(Label):
         self.img = Image.open(image)
         self.img.seek(0)
         self.image = ImageTk.PhotoImage(self.img)
-        super().__init__(*argv, image = self.image, **kwargs)
+        super().__init__(*argv, image=self.image, **kwargs)
         if 'delay' in kwargs:
             self.delay = kwargs['delay']
         else:
@@ -105,8 +107,7 @@ class AnimateGifLabel(Label):
 
 
 def set_user_music():
-    play_background_music(filedialog.askopenfilename(filetypes=(('Music (mp3, wav)', '*.mp3'), ('All files', '*.*'))))
-
+    play_background_music(filedialog.askopenfilename(filetypes=(('mp3, wav', '*.mp3'), ('All files', '*.*'))))
 
 
 class Chemical_Master:
@@ -114,7 +115,7 @@ class Chemical_Master:
         self.root = root
         pygame.init()
         pygame.mixer.init()
-        self.version = "CM 3.1.1"
+        self.version = "CM 3.1.3"
         self.root.title("Chemical Master")
         self.root.resizable(False, False)
         self.root.attributes("-topmost", True)
@@ -448,7 +449,6 @@ class Chemical_Master:
 
         root.after(self.time_of_GIF, self.commands_after_gif)
 
-
     # def on_minimize(self, event):
     #     root.iconify()
     #     self.popup.iconify()
@@ -499,25 +499,30 @@ class Chemical_Master:
         self.salt_label = Label(root, font=("Consolas", 30), fg='black', bg='khaki2', relief=RIDGE, width=20, bd=4)
         self.salt_label.place(relx=0.5, rely=0.1, anchor=CENTER)
 
-        self.describe_salt_label = Label(root, font=("Consolas", 12), fg='black', bg='grey90', relief=RIDGE, bd=4, wraplength=535, anchor='nw', justify='left', height=9)
+        self.describe_salt_label = Label(root, font=("Consolas", 12), fg='black', bg='grey90', relief=RIDGE, bd=4,
+                                         wraplength=535, anchor='nw', justify='left', height=9)
         self.describe_salt_label.place(relx=0.685, rely=0.33, anchor=CENTER)
 
         self.picture_label = Label(root, bd=4, relief=RIDGE)
         self.picture_label.place(relx=0.20, rely=0.33, anchor=CENTER)
 
-        self.score_label = Label(root, text=f" √: {self.correct_answers} ", font=("Consolas", 18), bg='green2',relief=RIDGE)
+        self.score_label = Label(root, text=f" √: {self.correct_answers} ", font=("Consolas", 18), bg='green2',
+                                 relief=RIDGE)
         self.score_label.place(relx=0.82, rely=0.1, anchor=CENTER)
 
-        self.unscore_label = Label(root, text=f" X: {self.incorrect_answers} ", font=("Consolas", 18), bg='red2',relief=RIDGE)
+        self.unscore_label = Label(root, text=f" X: {self.incorrect_answers} ", font=("Consolas", 18), bg='red2',
+                                   relief=RIDGE)
         self.unscore_label.place(relx=0.92, rely=0.1, anchor=CENTER)
 
-        self.number_of_question_label = Label(root, text=f" № питання {self.index}/9 ", height=1, font=("Consolas", 14), bg='light yellow', relief=RIDGE)
+        self.number_of_question_label = Label(root, text=f" № питання {self.index}/9 ", height=1, font=("Consolas", 14),
+                                              bg='light yellow', relief=RIDGE)
         self.number_of_question_label.place(relx=0.12, rely=0.1, anchor=CENTER)
 
         self.version_label = Label(root, text=f"Version: {self.version}", font=("Consolas", 10))
         self.version_label.place(relx=0, rely=1, anchor=SW)
 
-        self.countdown_label = Label(root, text="Timer", font=("Consolas", 15), width=14, bd=2, bg='khaki2', highlightbackground="green2", highlightthickness=5, relief=RIDGE)
+        self.countdown_label = Label(root, text="Timer", font=("Consolas", 15), width=14, bd=2, bg='khaki2',
+                                     highlightbackground="green2", highlightthickness=5, relief=RIDGE)
 
         self.create_menu()
 
@@ -538,7 +543,8 @@ class Chemical_Master:
                 self.set_disabled_state_on_button()
 
         def check():
-            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[self.index]:
+            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[
+                self.index]:
                 correct()
             else:
                 incorrect()
@@ -583,9 +589,9 @@ class Chemical_Master:
         self.popup.geometry(f"{popup_width}x{popup_height}+{self.popup_x}+{self.popup_y - 50}")
         self.popup.iconbitmap("../res/pictures/icons/icon.ico")
         self.popup.resizable(False, False)
+        self.popup.transient(root)
 
         self.popup.update()
-        self.popup.transient(root)
 
         # Визначення початкового зміщення
         self.delta_x = self.popup.winfo_x() - root.winfo_x()
@@ -596,7 +602,7 @@ class Chemical_Master:
 
         # Прив'язка подій до обох вікон
         root.bind("<Configure>", self.sync_windows)
-        self.popup.bind("<Configure>", self.sync_windows)
+        self.popup.bind("<Configure>", self.sync_windows_delayed)
 
         label = Label(self.popup, text=message, font=("Consolas", 14))
         label.pack(padx=10, pady=10)
@@ -643,7 +649,7 @@ class Chemical_Master:
         self.radio_b_4.bind("<Leave>", self.mouse_leave_radiobutton)
 
         if number_of_buttons == 1:
-            new_game_button.config(text="Скопіювати", command=lambda: pyperclip.copy(self.gmail))
+            new_game_button.config(text="Скопіювати пошту", command=lambda: pyperclip.copy(self.gmail))
             new_game_button.pack(side=TOP)
             close_button.pack(side=BOTTOM, pady=12)
         elif number_of_buttons == 2:
@@ -678,22 +684,35 @@ class Chemical_Master:
             close_button.config(text="Підтвердити", command=self.change_section_1)
             close_button.pack(side=BOTTOM, pady=10)
 
-    def sync_windows(self, event):
+    def sync_windows_delayed(self, event):
         """Синхронізація позицій вікон з затримкою."""
-        if event.widget == root:
-            # Рухаємо Toplevel разом з root
-            new_x = root.winfo_x() + self.delta_x
-            new_y = root.winfo_y() + self.delta_y
-            if (new_x, new_y) != (self.last_x, self.last_y):
-                self.popup.geometry(f"+{new_x}+{new_y}")
-                self.last_x, self.last_y = new_x, new_y
-        elif event.widget == self.popup:
+        # if event.widget == root:
+        #     # Рухаємо Toplevel разом з root
+        #     new_x = root.winfo_x() + self.delta_x
+        #     new_y = root.winfo_y() + self.delta_y
+        #     if (new_x, new_y) != (self.last_x, self.last_y):
+        #         self.popup.geometry(f"+{new_x}+{new_y}")
+        #         self.last_x, self.last_y = new_x, new_y
+        if event.widget == self.popup:
             # Рухаємо root разом з Toplevel
             new_x = self.popup.winfo_x() - self.delta_x
             new_y = self.popup.winfo_y() - self.delta_y
             if (new_x, new_y) != (self.last_x, self.last_y):
                 root.geometry(f"+{new_x}+{new_y}")
                 self.last_x, self.last_y = new_x, new_y
+
+    def sync_windows(self, event):
+        """Синхронізація позицій вікон."""
+        if event.widget == root:
+            # Рухаємо Toplevel разом з root
+            x = root.winfo_x() + self.delta_x
+            y = root.winfo_y() + self.delta_y
+            self.popup.geometry(f"+{x}+{y}")
+        # elif event.widget == self.popup:
+        #     # Рухаємо root разом з Toplevel
+        #     x = self.popup.winfo_x() - self.delta_x
+        #     y = self.popup.winfo_y() - self.delta_y
+        #     root.geometry(f"+{x}+{y}")
 
     def update_salt(self):
         if self.index < 9:
@@ -703,7 +722,8 @@ class Chemical_Master:
 
     def set_picture_on_label(self, image_path: str, label: Label):
         self.original_image = Image.open(image_path)
-        self.resized_image = self.original_image.resize((self.photo_label_width, self.photo_label_height), Image.LANCZOS)
+        self.resized_image = self.original_image.resize((self.photo_label_width, self.photo_label_height),
+                                                        Image.LANCZOS)
         self.image = ImageTk.PhotoImage(self.resized_image)
         label.config(image=self.image)
 
@@ -743,6 +763,7 @@ class Chemical_Master:
         self.canvas.pack()
 
         self.set_picture_on_background("../res/pictures/background_pictures/chemistry_png.jpg")
+        self.create_menu()
 
         if not self.study_variant_flag:
             self.show_message(
@@ -828,7 +849,8 @@ class Chemical_Master:
         self.create_widgets()
         self.very_important_func()
 
-        self.menubar.add_command(label="Змінити розділ", command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
+        self.menubar.add_command(label="Змінити розділ",
+                                 command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
 
         self.menu_exit = Menu(self.menubar, tearoff=0)
         self.menu_exit.add_command(label="Так, я дійсно хочу вийти з гри", command=self.close_game)
@@ -836,7 +858,6 @@ class Chemical_Master:
         self.menubar.add_cascade(label="Вихід з гри", menu=self.menu_exit)
 
         self.update_salt()
-
 
     def change_section_1(self):
         """
@@ -848,7 +869,8 @@ class Chemical_Master:
 
             self.create_widgets()
 
-            self.menubar.add_command(label="Змінити розділ", command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
+            self.menubar.add_command(label="Змінити розділ",
+                                     command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
             self.menu_exit = Menu(self.menubar, tearoff=0)
             self.menu_exit.add_command(label="Так, я дійсно хочу вийти з гри", command=self.close_game)
             self.menu_exit.add_command(label="Ні, я передумав - краще продовжу грати :)")
@@ -888,11 +910,13 @@ class Chemical_Master:
         self.radio_b_2.config(bg="SystemButtonFace")
         self.radio_b_3.config(bg="SystemButtonFace")
         self.radio_b_4.config(bg="SystemButtonFace")
+
     def second_radio_button_change_section(self):
         self.radio_b_1.config(bg="SystemButtonFace")
         self.radio_b_2.config(bg="PaleGreen2")
         self.radio_b_3.config(bg="SystemButtonFace")
         self.radio_b_4.config(bg="SystemButtonFace")
+
     def third_radio_button_change_section(self):
         self.radio_b_1.config(bg="SystemButtonFace")
         self.radio_b_2.config(bg="SystemButtonFace")
@@ -912,7 +936,7 @@ class Chemical_Master:
         self.popup_2 = Toplevel(root)
         self.popup_2.title("Chemical Master: message")
         self.popup_2.attributes("-topmost", True)
-        self.popup_2.geometry(f"{720}x{150}+{self.popup_2_x}+{self.popup_2_y - 50}")
+        self.popup_2.geometry(f"{700}x{150}+{self.popup_2_x+10}+{self.popup_2_y - 50}")
         self.popup_2.iconbitmap("../res/pictures/icons/icon.ico")
 
         self.popup_2.update()
@@ -942,12 +966,12 @@ class Chemical_Master:
 
     def user_select_section(self):
         self.popup.destroy()
-        self.show_message("Виберіть розділ: ", 5, 500, 350)
+        self.show_message("Виберіть розділ: ", 5,700, 350)
 
     def user_select_section_study(self):
         self.study_variant_flag = True
         self.popup.destroy()
-        self.show_message("Виберіть розділ: ", 6, 500, 300)
+        self.show_message("Виберіть розділ: ", 6, 700, 300)
 
     def very_important_func(self):
         self.random_salt_formulas = random.sample(sorted(self.all_dicts[self.var.get()].keys()), 9)
