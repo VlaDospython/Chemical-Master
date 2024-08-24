@@ -1,13 +1,10 @@
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 import random
 import time
 from PIL import ImageTk, Image
 import pygame
 import pyperclip
-
-
-# from tkinter import ttk
 
 
 def digital_print_onlabel(text: str, label: Label, window: Toplevel | None):
@@ -150,14 +147,25 @@ class Chemical_Master:
         self.moved = False  # Змінна для відстеження руху вікна
         self.var = IntVar()
         self.var.set(0)
-        # self.style = ttk.Style()
-        # self.style.theme_use('classic')
-        # self.style.configure("red.Horizontal.TProgressbar", foreground='PaleGreen3', background='PaleGreen3')
+
+        # Створення стилю для прогрес-бару, Доступні теми: ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
+        self.style = ttk.Style()
+        self.style.theme_use('default')
+        self.style.configure(
+                "Custom.Horizontal.TProgressbar",
+                troughcolor='grey65',  # Колір фону прогрес-бару
+                background='green2',  # Колір заповнення прогрес-бару
+                thickness=20,  # Збільшена товщина прогрес-бару (висота)
+                troughrelief='sunken',  # Рельєф фону прогрес-бару (sunken, raised, flat тощо)
+                darkcolor='#2E7D32',  # Темний колір заповнення прогрес-бару
+                borderwidth=2,
+                bordercolor="red2"
+            )
+
         self.autors_text = ("Учні 8-В класу СШ №304, м.Київ:\nМоскаленко Влад - розробник коду Python, генератор ідей\n"
                             "Орлов Георгій - інформація про хімічні сполуки\nДанилейко Данило - фото хімічних сполук\n\nДата випуску - 18.03.2024"
                             "\n \nРозробник: ODM Game World; Видавець: ODM Game World;\n ©ODM Game World\n"
                             f"\nЗ приводу питань і пропозицій звертайтеся за поштою:\n{self.gmail}")
-
         self.describe_salt_str = ("Со́лі — хімічні речовини йонної будови, до складу яких\n"
                                   "входять кислотні залишки, поєднані з катіонами різного походження.\n"
                                   "Утворюються солі внаслідок реакції нейтралізації кислот та основ.\n"
@@ -190,7 +198,7 @@ class Chemical_Master:
             "KI": {
                 "correct_name": "Йодид калію",
                 "image": "../res/pictures/salts_pictures/KI.jpg",
-                "description": "Речовина є безбарвними кристалами, які добре розчиняються у воді. Незначною мірою йодид калію поширений у морських водоростях. Йодид калію використовується як лікарський засіб при йододефіцитних захворюваннях, для захисту щитоподібної залози від впливу радіоактивного йоду-131. Також KI застосовується як харчова добавка (наприклад, до кухонної солі) та у фотографічній справі."
+                "description": "Речовина є безбарвними кристалами, які добре розчиняються у воді. Незначною мірою йодид калію поширений у морських водоростях. Йодид калію використовується як лікарський засіб при йододефіцитних захворюваннях, для захисту щитоподібної залози від впливу радіоактивного йоду-131. Також застосовується як харчова добавка (наприклад, до кухонної солі) та у фотографічній справі."
             },
             "CaCl₂": {
                 "correct_name": "Кальцій хлористий",
@@ -524,6 +532,8 @@ class Chemical_Master:
         self.countdown_label = Label(root, text="Timer", font=("Consolas", 15), width=14, bd=2, bg='khaki2',
                                      highlightbackground="green2", highlightthickness=5, relief=RIDGE)
 
+        self.progress_bar = ttk.Progressbar(root, length=900, mode='determinate', style='Custom.Horizontal.TProgressbar')
+
         self.create_menu()
 
     def check_salt(self, x: int, y: int):
@@ -543,8 +553,7 @@ class Chemical_Master:
                 self.set_disabled_state_on_button()
 
         def check():
-            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[
-                self.index]:
+            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[self.index]:
                 correct()
             else:
                 incorrect()
@@ -778,6 +787,11 @@ class Chemical_Master:
 
         self.study_variant_flag = False
 
+        self.style.configure(
+            "Custom.Horizontal.TProgressbar",
+            background='green2',  # Колір заповнення прогрес-бару
+        )
+
     def new_game(self):
         self.popup.destroy()
         self.index = 0
@@ -794,40 +808,70 @@ class Chemical_Master:
         root.after(800, lambda: self.root.destroy())
 
     def timer(self, seconds):
-        if seconds >= 0:
-            self.countdown_label.config(text=f"00:{str(seconds).rjust(2, '0')}")
-            self.time_to_answers -= 1
-            root.after(1000, lambda: self.timer(self.time_to_answers))
+        self.progress_bar['value'] = 100
 
-        if 20 > seconds >= 10:
-            self.countdown_label.config(highlightbackground="orange2")
+        # Ініціалізація залишкового часу
+        remaining_time = seconds
 
-        if 10 > seconds:
-            self.countdown_label.config(highlightbackground="red2")
+        # Обчислення інтервалу часу для оновлення прогрес-бару
+        interval = seconds / 100
 
-        if seconds <= 2:
-            fade_out_music(4)
+        def update_progress():
+            nonlocal remaining_time  # Використання змінної з батьківської області видимості
 
-        if seconds == 0:
-            self.set_disabled_state_on_button()
+            # Отримання поточного значення прогресу
+            current_value = self.progress_bar['value']
 
-            play_sound(self.incorrect_answer_sound)
+            if current_value > 0:
+                # Зменшення значення прогресу
+                self.progress_bar['value'] = current_value - 1
 
-            def function_():
-                for widget in root.winfo_children():
-                    widget.destroy()
+                # Зменшення залишкового часу
+                remaining_time -= interval
 
-                self.canvas = Canvas(root, width=self.window_width, height=self.window_height)
-                self.canvas.pack()
+                # Перевірка, чи залишилося 20 секунди до кінця
+                if remaining_time <= 25 and remaining_time > 25 - interval:
+                    self.style.configure(
+                        "Custom.Horizontal.TProgressbar",
+                        background='gold',  # Колір заповнення прогрес-бару
+                    )
 
-                self.set_picture_on_background("../res/pictures/background_pictures/chemistry_png.jpg")
+                # Перевірка, чи залишилося 10 секунди до кінця
+                if remaining_time <= 10 and remaining_time > 10 - interval:
+                    self.style.configure(
+                        "Custom.Horizontal.TProgressbar",
+                        background='red',  # Колір заповнення прогрес-бару
+                    )
 
-                self.show_message(
-                    f"Час вийшов!\nСподіваємося, ви дізналися щось нове або повторили вже відоме.\nВаш результат: {self.correct_answers}/9 балів.\n"
-                    f"\nТут могла б бути Ваша реклама :)",
-                    2, 700, 200)
+                # Перевірка, чи залишилося 2 секунди до кінця
+                if remaining_time <= 2 and remaining_time > 2 - interval:
+                    fade_out_music(4)
 
-            root.after(700, function_)
+                # Запуск оновлення через заданий інтервал
+                root.after(int(interval * 1000), update_progress)
+            else:
+                self.set_disabled_state_on_button()
+
+                play_sound(self.incorrect_answer_sound)
+
+                def function_():
+                    for widget in root.winfo_children():
+                        widget.destroy()
+
+                    self.canvas = Canvas(root, width=self.window_width, height=self.window_height)
+                    self.canvas.pack()
+
+                    self.set_picture_on_background("../res/pictures/background_pictures/chemistry_png.jpg")
+
+                    self.show_message(
+                        f"Час вийшов!\nСподіваємося, ви дізналися щось нове або повторили вже відоме.\nВаш результат: {self.correct_answers}/9 балів.\n"
+                        f"\nТут могла б бути Ваша реклама :)",
+                        2, 700, 200)
+
+                root.after(700, function_)
+
+        # Початок оновлення прогрес-бару
+        update_progress()
 
     def set_disabled_state_on_button(self):
         for x in range(self.board_size):
@@ -849,8 +893,7 @@ class Chemical_Master:
         self.create_widgets()
         self.very_important_func()
 
-        self.menubar.add_command(label="Змінити розділ",
-                                 command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
+        self.menubar.add_command(label="Змінити розділ", command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
 
         self.menu_exit = Menu(self.menubar, tearoff=0)
         self.menu_exit.add_command(label="Так, я дійсно хочу вийти з гри", command=self.close_game)
@@ -895,7 +938,7 @@ class Chemical_Master:
             self.menu_exit.add_command(label="Ні, я передумав - краще продовжу грати :)")
             self.menubar.add_cascade(label="Вихід з гри", menu=self.menu_exit)
 
-            self.countdown_label.place(relx=0.5, rely=0.98, anchor=S)
+            self.progress_bar.place(rely=0.96, anchor=SW)
 
             self.very_important_func()
             self.update_salt()
