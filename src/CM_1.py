@@ -112,7 +112,7 @@ class Chemical_Master:
         self.root = root
         pygame.init()
         pygame.mixer.init()
-        self.version = "CM 3.1.3"
+        self.version = "CM 3.2.0"
         self.root.title("Chemical Master")
         self.root.resizable(False, False)
         self.root.attributes("-topmost", True)
@@ -787,6 +787,9 @@ class Chemical_Master:
 
         self.study_variant_flag = False
 
+        self.version_label = Label(root, text=f"Version: {self.version}", font=("Consolas", 10))
+        self.version_label.place(relx=0, rely=1, anchor=SW)
+
         self.style.configure(
             "Custom.Horizontal.TProgressbar",
             background='green2',  # Колір заповнення прогрес-бару
@@ -800,6 +803,10 @@ class Chemical_Master:
         self.time_to_answers = 45
 
         self.show_message("Оберіть режим гри і продовжіть грати (або вийти)", 3, 700, 170)
+        self.style.configure(
+            "Custom.Horizontal.TProgressbar",
+            background='green2',  # Колір заповнення прогрес-бару
+        )
 
     def close_game(self):
         set_all_channels_volume_to_zero()
@@ -862,11 +869,15 @@ class Chemical_Master:
                     self.canvas.pack()
 
                     self.set_picture_on_background("../res/pictures/background_pictures/chemistry_png.jpg")
+                    self.create_menu()
 
                     self.show_message(
                         f"Час вийшов!\nСподіваємося, ви дізналися щось нове або повторили вже відоме.\nВаш результат: {self.correct_answers}/9 балів.\n"
                         f"\nТут могла б бути Ваша реклама :)",
                         2, 700, 200)
+
+                    self.version_label = Label(root, text=f"Version: {self.version}", font=("Consolas", 10))
+                    self.version_label.place(relx=0, rely=1, anchor=SW)
 
                 root.after(700, function_)
 
