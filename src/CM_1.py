@@ -139,6 +139,8 @@ class Chemical_Master:
         self.end_of_game_sound = "../res/sounds/end_of_game_sound.mp3"
         self.start_game_sound = "../res/sounds/start_game_sound.mp3"
         self.background_music_1 = "../res/sounds/background_music/background_music.mp3"
+        self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
+        self.background_music_set = [self.background_music_1, self.background_music_2]
         self.close_game_sound = "../res/sounds/close_game_sound.mp3"
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
@@ -937,7 +939,7 @@ class Chemical_Master:
 
             play_sound(self.start_game_sound)
 
-            root.after(2500, lambda: play_background_music(self.background_music_1))
+            root.after(2500, lambda: play_background_music(random.choice(self.background_music_set)))
 
         else:
             self.popup.destroy()
@@ -957,7 +959,7 @@ class Chemical_Master:
 
             play_sound(self.start_game_sound)
 
-            root.after(2500, lambda: play_background_music(self.background_music_1))
+            root.after(2500, lambda: play_background_music(random.choice(self.background_music_set)))
 
     def first_radio_button_change_section(self):
         self.radio_b_1.config(bg="PaleGreen2")
