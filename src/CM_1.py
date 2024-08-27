@@ -143,7 +143,8 @@ class Chemical_Master:
         self.background_music_1 = "../res/sounds/background_music/background_music_1.mp3"
         self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
         self.background_music_3 = "../res/sounds/background_music/background_music_3.mp3"
-        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3]
+        self.background_music_4 = "../res/sounds/background_music/background_music_4.mp3"
+        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3, self.background_music_4]
 
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
