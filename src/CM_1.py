@@ -26,7 +26,7 @@ def play_sound(sound_: str):
 
 def play_background_music(music: str):
     pygame.mixer.music.load(music)  # ваша фонова музика
-    pygame.mixer.music.set_volume(0.5)  # призначення гучності фонової музики
+    pygame.mixer.music.set_volume(1)  # призначення гучності фонової музики
     pygame.mixer.music.play(loops=-1)  # loops=-1 означає нескінченне відтворення
 
 
@@ -112,7 +112,7 @@ class Chemical_Master:
         self.root = root
         pygame.init()
         pygame.mixer.init()
-        self.version = "CM 3.2.0"
+        self.version = "CM 3.2.1"
         self.root.title("Chemical Master")
         self.root.resizable(False, False)
         self.root.attributes("-topmost", True)
@@ -138,10 +138,13 @@ class Chemical_Master:
         self.incorrect_answer_sound = "../res/sounds/incorrect_answer_sound.mp3"
         self.end_of_game_sound = "../res/sounds/end_of_game_sound.mp3"
         self.start_game_sound = "../res/sounds/start_game_sound.mp3"
-        self.background_music_1 = "../res/sounds/background_music/background_music.mp3"
-        self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
-        self.background_music_set = [self.background_music_1, self.background_music_2]
         self.close_game_sound = "../res/sounds/close_game_sound.mp3"
+
+        self.background_music_1 = "../res/sounds/background_music/background_music_1.mp3"
+        self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
+        self.background_music_3 = "../res/sounds/background_music/background_music_3.mp3"
+        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3]
+
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
         self.study_variant_flag = False
@@ -733,8 +736,7 @@ class Chemical_Master:
 
     def set_picture_on_label(self, image_path: str, label: Label):
         self.original_image = Image.open(image_path)
-        self.resized_image = self.original_image.resize((self.photo_label_width, self.photo_label_height),
-                                                        Image.LANCZOS)
+        self.resized_image = self.original_image.resize((self.photo_label_width, self.photo_label_height),Image.LANCZOS)
         self.image = ImageTk.PhotoImage(self.resized_image)
         label.config(image=self.image)
 
