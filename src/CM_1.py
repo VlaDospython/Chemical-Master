@@ -6,6 +6,8 @@ from PIL import ImageTk, Image
 import pygame
 import pyperclip
 
+# pyinstaller -F -w -i "C:\Users\vladt\PycharmProjects\Chemical-Master\res\pictures\icons\icon2.ico"
+
 
 def digital_print_onlabel(text: str, label: Label, window: Toplevel | None):
     for i, c in enumerate(text, 1):
@@ -116,7 +118,7 @@ class Chemical_Master:
         self.root.title("Chemical Master")
         self.root.resizable(False, False)
         self.root.attributes("-topmost", True)
-        self.root.iconbitmap("../res/pictures/icons/icon.ico")
+        self.root.iconbitmap("../res/pictures/icons/icon2.ico")
         self.window_width = 900
         self.window_height = 600
         self.root_x = (self.root.winfo_screenwidth() - self.window_width) // 2
@@ -144,8 +146,7 @@ class Chemical_Master:
         self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
         self.background_music_3 = "../res/sounds/background_music/background_music_3.mp3"
         self.background_music_4 = "../res/sounds/background_music/background_music_4.mp3"
-        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3,
-                                     self.background_music_4]
+        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3,self.background_music_4]
 
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
@@ -561,8 +562,7 @@ class Chemical_Master:
                 self.set_disabled_state_on_button()
 
         def check():
-            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[
-                self.index]:
+            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[self.index]:
                 correct()
             else:
                 incorrect()
@@ -579,8 +579,7 @@ class Chemical_Master:
             root.after(self.delay, self.shuffle_buttons)
             root.after(self.delay, self.set_normal_state_on_button)
         else:
-            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[
-                self.index]:
+            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[self.index]:
                 correct()
                 self.index += 1
                 play_sound(self.correct_answer_sound)
@@ -606,7 +605,7 @@ class Chemical_Master:
         self.popups.title("Chemical_Master: Authors")
         self.popups.attributes("-topmost", True)
         self.popups.geometry(f"{popup_width}x{popup_height}+{self.popup_xs}+{self.popup_ys - 50}")
-        self.popups.iconbitmap("../res/pictures/icons/icon.ico")
+        self.popups.iconbitmap("../res/pictures/icons/icon2.ico")
         self.popups.resizable(False, False)
         self.popups.transient(root)
 
@@ -621,7 +620,6 @@ class Chemical_Master:
         new_game_buttons = Button(self.popups, text="Нова гра", font=("Consolas", 13), width=20, relief=RAISED,
                                  overrelief=GROOVE, bd=3, command=self.new_game, cursor="hand2")
 
-
         new_game_buttons.config(text="Скопіювати пошту", command=lambda: pyperclip.copy(self.gmail))
         new_game_buttons.pack(side=TOP)
         close_buttons.pack(side=BOTTOM, pady=12)
@@ -634,7 +632,7 @@ class Chemical_Master:
         self.popup.title("Chemical_Master: message")
         self.popup.attributes("-topmost", True)
         self.popup.geometry(f"{popup_width}x{popup_height}+{self.popup_x}+{self.popup_y - 50}")
-        self.popup.iconbitmap("../res/pictures/icons/icon.ico")
+        self.popup.iconbitmap("../res/pictures/icons/icon2.ico")
         self.popup.resizable(False, False)
         self.popup.transient(root)
 
