@@ -144,7 +144,8 @@ class Chemical_Master:
         self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
         self.background_music_3 = "../res/sounds/background_music/background_music_3.mp3"
         self.background_music_4 = "../res/sounds/background_music/background_music_4.mp3"
-        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3, self.background_music_4]
+        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3,
+                                     self.background_music_4]
 
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
@@ -158,15 +159,15 @@ class Chemical_Master:
         self.style = ttk.Style()
         self.style.theme_use('default')
         self.style.configure(
-                "Custom.Horizontal.TProgressbar",
-                troughcolor='grey65',  # Колір фону прогрес-бару
-                background='green2',  # Колір заповнення прогрес-бару
-                thickness=20,  # Збільшена товщина прогрес-бару (висота)
-                troughrelief='sunken',  # Рельєф фону прогрес-бару (sunken, raised, flat тощо)
-                darkcolor='#2E7D32',  # Темний колір заповнення прогрес-бару
-                borderwidth=2,
-                bordercolor="red2"
-            )
+            "Custom.Horizontal.TProgressbar",
+            troughcolor='grey65',  # Колір фону прогрес-бару
+            background='green2',  # Колір заповнення прогрес-бару
+            thickness=20,  # Збільшена товщина прогрес-бару (висота)
+            troughrelief='sunken',  # Рельєф фону прогрес-бару (sunken, raised, flat тощо)
+            darkcolor='#2E7D32',  # Темний колір заповнення прогрес-бару
+            borderwidth=2,
+            bordercolor="red2"
+        )
 
         self.autors_text = ("Учні 8-В класу СШ №304, м.Київ:\nМоскаленко Влад - розробник коду Python, генератор ідей\n"
                             "Орлов Георгій - інформація про хімічні сполуки\nДанилейко Данило - фото хімічних сполук\n\nДата випуску - 18.03.2024"
@@ -487,7 +488,7 @@ class Chemical_Master:
         self.menubar = Menu(self.root)
         self.root.config(menu=self.menubar)
 
-        self.menubar.add_command(label="Про авторів", command=lambda: self.show_message(self.autors_text, 1, 700, 450))
+        self.menubar.add_command(label="Про авторів", command=lambda: self.show_autors(self.autors_text, 700, 450))
 
         self.menu_music = Menu(self.menubar, tearoff=0)
         self.menu_music.add_command(label="Вимкнути музику", command=set_all_channels_volume_to_zero)
@@ -538,7 +539,8 @@ class Chemical_Master:
         self.countdown_label = Label(root, text="Timer", font=("Consolas", 15), width=14, bd=2, bg='khaki2',
                                      highlightbackground="green2", highlightthickness=5, relief=RIDGE)
 
-        self.progress_bar = ttk.Progressbar(root, length=900, mode='determinate', style='Custom.Horizontal.TProgressbar')
+        self.progress_bar = ttk.Progressbar(root, length=900, mode='determinate',
+                                            style='Custom.Horizontal.TProgressbar')
 
         self.create_menu()
 
@@ -559,7 +561,8 @@ class Chemical_Master:
                 self.set_disabled_state_on_button()
 
         def check():
-            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[self.index]:
+            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[
+                self.index]:
                 correct()
             else:
                 incorrect()
@@ -576,7 +579,8 @@ class Chemical_Master:
             root.after(self.delay, self.shuffle_buttons)
             root.after(self.delay, self.set_normal_state_on_button)
         else:
-            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[self.index]:
+            if self.all_dicts[self.var.get()][self.buttons[x][y]["text"]]["correct_name"] == self.salt_9_name[
+                self.index]:
                 correct()
                 self.index += 1
                 play_sound(self.correct_answer_sound)
@@ -593,6 +597,34 @@ class Chemical_Master:
         if self.index == 9:
             fade_out_music(1.7)
             root.after(self.delay + 1000, self.end_of_game)
+
+    def show_autors(self, message: str, popup_width: int, popup_height):
+        self.popup_xs = (root.winfo_screenwidth() - popup_width) // 2
+        self.popup_ys = (root.winfo_screenheight() - popup_height) // 2
+
+        self.popups = Toplevel(root)
+        self.popups.title("Chemical_Master: Authors")
+        self.popups.attributes("-topmost", True)
+        self.popups.geometry(f"{popup_width}x{popup_height}+{self.popup_xs}+{self.popup_ys - 50}")
+        self.popups.iconbitmap("../res/pictures/icons/icon.ico")
+        self.popups.resizable(False, False)
+        self.popups.transient(root)
+
+        self.popups.update()
+
+        labels = Label(self.popups, text=message, font=("Consolas", 14))
+        labels.pack(padx=10, pady=10)
+
+        close_buttons = Button(self.popups, text="Закрити", font=("Consolas", 13), width=20, relief=RAISED,
+                              overrelief=GROOVE, bd=3, command=lambda: self.popups.destroy(), cursor="hand2")
+
+        new_game_buttons = Button(self.popups, text="Нова гра", font=("Consolas", 13), width=20, relief=RAISED,
+                                 overrelief=GROOVE, bd=3, command=self.new_game, cursor="hand2")
+
+
+        new_game_buttons.config(text="Скопіювати пошту", command=lambda: pyperclip.copy(self.gmail))
+        new_game_buttons.pack(side=TOP)
+        close_buttons.pack(side=BOTTOM, pady=12)
 
     def show_message(self, message: str, number_of_buttons: int, popup_width: int, popup_height):
         self.popup_x = (root.winfo_screenwidth() - popup_width) // 2
@@ -663,11 +695,7 @@ class Chemical_Master:
         self.radio_b_3.bind("<Leave>", self.mouse_leave_radiobutton)
         self.radio_b_4.bind("<Leave>", self.mouse_leave_radiobutton)
 
-        if number_of_buttons == 1:
-            new_game_button.config(text="Скопіювати пошту", command=lambda: pyperclip.copy(self.gmail))
-            new_game_button.pack(side=TOP)
-            close_button.pack(side=BOTTOM, pady=12)
-        elif number_of_buttons == 2:
+        if number_of_buttons == 2:
             self.popup.title("Chemical_Master: game results")
             new_game_button.pack(pady=10, side=LEFT, padx=50)
             close_button.config(text="Вийти з гри", foreground="OrangeRed4", command=self.close_game)
@@ -737,7 +765,8 @@ class Chemical_Master:
 
     def set_picture_on_label(self, image_path: str, label: Label):
         self.original_image = Image.open(image_path)
-        self.resized_image = self.original_image.resize((self.photo_label_width, self.photo_label_height),Image.LANCZOS)
+        self.resized_image = self.original_image.resize((self.photo_label_width, self.photo_label_height),
+                                                        Image.LANCZOS)
         self.image = ImageTk.PhotoImage(self.resized_image)
         label.config(image=self.image)
 
@@ -909,7 +938,8 @@ class Chemical_Master:
         self.create_widgets()
         self.very_important_func()
 
-        self.menubar.add_command(label="Змінити розділ", command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
+        self.menubar.add_command(label="Змінити розділ",
+                                 command=lambda: self.show_message("Виберіть розділ: ", 4, 500, 300))
 
         self.menu_exit = Menu(self.menubar, tearoff=0)
         self.menu_exit.add_command(label="Так, я дійсно хочу вийти з гри", command=self.close_game)
@@ -995,7 +1025,7 @@ class Chemical_Master:
         self.popup_2 = Toplevel(root)
         self.popup_2.title("Chemical Master: message")
         self.popup_2.attributes("-topmost", True)
-        self.popup_2.geometry(f"{700}x{150}+{self.popup_2_x+10}+{self.popup_2_y - 50}")
+        self.popup_2.geometry(f"{700}x{150}+{self.popup_2_x + 10}+{self.popup_2_y - 50}")
         self.popup_2.iconbitmap("../res/pictures/icons/icon.ico")
 
         self.popup_2.update()
@@ -1025,7 +1055,7 @@ class Chemical_Master:
 
     def user_select_section(self):
         self.popup.destroy()
-        self.show_message("Виберіть розділ: ", 5,700, 350)
+        self.show_message("Виберіть розділ: ", 5, 700, 350)
 
     def user_select_section_study(self):
         self.study_variant_flag = True
@@ -1035,7 +1065,8 @@ class Chemical_Master:
     def very_important_func(self):
         self.random_salt_formulas = random.sample(sorted(self.all_dicts[self.var.get()].keys()), 9)
         self.salt_9_name = [self.all_dicts[self.var.get()][salt]["correct_name"] for salt in self.random_salt_formulas]
-        self.salt_9_description = [self.all_dicts[self.var.get()][description]["description"] for description in self.random_salt_formulas]
+        self.salt_9_description = [self.all_dicts[self.var.get()][description]["description"] for description in
+                                   self.random_salt_formulas]
         self.salt_9_images = [self.all_dicts[self.var.get()][image]["image"] for image in self.random_salt_formulas]
 
         for x in range(self.board_size):
