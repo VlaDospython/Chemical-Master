@@ -146,7 +146,7 @@ class Chemical_Master:
         self.background_music_2 = "../res/sounds/background_music/background_music_2.mp3"
         self.background_music_3 = "../res/sounds/background_music/background_music_3.mp3"
         self.background_music_4 = "../res/sounds/background_music/background_music_4.mp3"
-        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3,self.background_music_4]
+        self.background_music_set = [self.background_music_2, self.background_music_1, self.background_music_3]
 
         self.gmail = 'odmcmquestion@gmail.com'
         self.time_to_answers = 45
@@ -171,7 +171,7 @@ class Chemical_Master:
         )
 
         self.autors_text = ("Учні 8-В класу СШ №304, м.Київ:\nМоскаленко Влад - розробник коду Python, генератор ідей\n"
-                            "Орлов Георгій - інформація про хімічні сполуки\nДанилейко Данило - фото хімічних сполук\n\nДата випуску - 18.03.2024"
+                            "\nВелика подяка: \nОрлов Георгій - за допомогу в пошуку інформації про хімічні сполуки\nДанилейко Данило - за допомогу в пошуку фото хімічних сполук\n\nДата випуску - 18.03.2024"
                             "\n \nРозробник: ODM Game World; Видавець: ODM Game World;\n ©ODM Game World\n"
                             f"\nЗ приводу питань і пропозицій звертайтеся за поштою:\n{self.gmail}")
         self.describe_salt_str = ("Со́лі — хімічні речовини йонної будови, до складу яких\n"
